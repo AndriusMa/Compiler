@@ -31,7 +31,10 @@ class Lexer:
 		self.running = 1;
 		self.input = input_;
 		self.curr_char = '';
+<<<<<<< HEAD
 		self.error_counter = 0;
+=======
+>>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 	
 	def add(self):
 		self.buffer += self.curr_char;
@@ -161,8 +164,15 @@ class Lexer:
 			self.buffer = "";
 			self.complete_token("KW_BOOL", 0);
 		elif(self.buffer == "true"):
+<<<<<<< HEAD
 			self.complete_token("LIT_BOOL", 0);
 		elif(self.buffer == "false"):
+=======
+			self.buffer = "";
+			self.complete_token("LIT_BOOL", 0);
+		elif(self.buffer == "false"):
+			self.buffer = "";
+>>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 			self.complete_token("LIT_BOOL", 0);
 		elif(self.buffer == "fun"):
 			self.buffer = "";
@@ -232,8 +242,11 @@ class Lexer:
 			self.complete_token("OP_MINUS_ASSIGN", 1);
 		elif(self.curr_char == '>'):
 			self.complete_token("STDOUT", 1);
+<<<<<<< HEAD
 		elif(self.curr_char == '<'):
 			self.complete_token("STDIN", 1);
+=======
+>>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		else:
 			self.complete_token("OP_MINUS", 0);
 			
@@ -423,7 +436,11 @@ class Lexer:
 	
 	def error(self, error_code):
 		self.buffer = "";
+<<<<<<< HEAD
 		#sys.stderr.write("LEXER ERROR: " + error_code + " on line "  + str(self.current_ln) + " in file: " + sys.argv[1] + "\n"); 
 		sys.stderr.write(sys.argv[1] + ":" + str(self.current_ln)+ ": Error: " + error_code + "\n");
 		self.error_counter += 1;
+=======
+		sys.stderr.write("LEXER ERROR: " + error_code + " on line "  + str(self.current_ln) + " in file: " + sys.argv[1] + "\n"); 
+>>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		self.running = 0;

@@ -1,6 +1,9 @@
 import sys
 from ast import *
+<<<<<<< HEAD
 from lexer import *
+=======
+>>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 
 class Parser:
 	def  __init__(self, tokens):
@@ -8,11 +11,17 @@ class Parser:
 		self.loop = 0;
 		self.ifCounter = 0;
 		self.offset = 0;
+<<<<<<< HEAD
 		self.error_counter = 0;
 	
 	def error(self, error_code):
 		sys.stderr.write(sys.argv[1] + ":" + str(self.tokens[self.offset-1].line_no)+ ": Error: " + error_code + "\n");
 		self.error_counter += 1;
+=======
+	
+	def error(self, error_code):
+		sys.stderr.write(sys.argv[1] + ":" + str(self.tokens[self.offset-1].line_no)+ ": " + error_code + "\n");
+>>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		exit(0);
 	
 	def accept(self, token_type):
@@ -211,14 +220,21 @@ class Parser:
 			return self.parse_expr_lit_bool();
 		elif(self.tokens[self.offset].token_type == "LIT_FLOAT"):
 			return self.parse_expr_lit_float();
+<<<<<<< HEAD
 		elif(self.tokens[self.offset].token_type == "LIT_STR"):
+=======
+		elif(self.tokens[self.offset].token_type == "LIT_STRING"):
+>>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 			return self.parse_expr_lit_string();
 		elif(self.tokens[self.offset].token_type == "LIT_CHAR"):
 			return self.parse_expr_lit_char();
 		elif(self.tokens[self.offset].token_type == "OP_ROUND_OPEN"):
 			return self.parse_expr_paren();
+<<<<<<< HEAD
 		elif(self.tokens[self.offset].token_type == "STDIN"):
 			return self.parse_expr_stdin();
+=======
+>>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		else:
 			return None;
 	
@@ -242,17 +258,24 @@ class Parser:
 		return Expr_lit(lit);
 		
 	def parse_expr_lit_string(self):
+<<<<<<< HEAD
 		lit = self.expect("LIT_STR");
+=======
+		lit = self.expect("LIT_STRING");
+>>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		return Expr_lit(lit);
 		
 	def parse_expr_lit_char(self):
 		lit = self.expect("LIT_CHAR");
 		return Expr_lit(lit);
+<<<<<<< HEAD
 	
 	def parse_expr_stdin(self):
 		lit = self.expect("STDIN");
 		expr = self.parse_expr();
 		return Expr_stdin(expr);
+=======
+>>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		
 	def parse_expr_paren(self):
 		self.expect("OP_ROUND_OPEN");
@@ -317,10 +340,13 @@ class Parser:
 			return self.parse_stmt_break();
 		elif(self.accept("KW_WHILE") is not None):
 			return self.parse_stmt_while();
+<<<<<<< HEAD
 		elif(self.accept("STDOUT") is not None):
 			return self.parse_stmt_stdout();
 		elif(self.accept("STDIN") is not None):
 			return self.parse_stmt_stdin();
+=======
+>>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		else:
 			token_type = self.parse_type();
 			if(token_type is not None):
@@ -398,12 +424,15 @@ class Parser:
 		
 		return Stmt_stdout(stmt);
 		
+<<<<<<< HEAD
 	def parse_stmt_stdin(self):
 		stmt = self.parse_expr();
 		self.expect("OP_SEMICOLON");
 		
 		return Stmt_stdin(stmt);
 		
+=======
+>>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 	def parse_stmt_return(self):
 		return_kw = self.tokens[self.offset];
 		value = self.parse_expr();
