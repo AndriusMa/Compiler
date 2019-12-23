@@ -1,6 +1,5 @@
 import copy
 import sys
-<<<<<<< HEAD
 import lexer
 from lexer import *
 from check_types import *
@@ -9,30 +8,17 @@ from to_bytes import *
 
 stack_slot_index = 0;
 global_stack_slot_index = 0;
-=======
-from lexer import *
-from check_types import *
-from code_writer import *
-
-stack_slot_index = 0;
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 
 class Scope:
 	def __init__(self, parent_scope):
 		self.parent_scope = parent_scope;
 		self.members = {}; #hashmap
-<<<<<<< HEAD
 		self.error_counter = 0;
 	
 	def error(self, message, line_no):
 		sys.stderr.write(sys.argv[1] + ":" + str(line_no)+ ": Error: " + message + "\n");
 		self.error_counter += 1;
 		exit(0);
-=======
-	
-	def error(self, message, line_no):
-		sys.stderr.write("SCOPE ERROR: " + message + " on line " + str(line_no) + " in file " + sys.argv[1] + '\n');
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 				
 	def add(self, name_token, node):
 		name = name_token.token_value;
@@ -58,7 +44,6 @@ class Node:
 		self.parent = None;
 
 	def print_node(self, p):
-<<<<<<< HEAD
 	  sys.stderr.write("Error: print not implemented for: %s\n" % (self));
 	  exit(0);	
 	  		
@@ -69,15 +54,6 @@ class Node:
 	def check_types(self):
 		sys.stderr.write("Error: check_types method not implemented for %s\n" % (self));
 		exit(0);
-=======
-	  sys.stderr.write("print not implemented for: %s\n" % (self));	
-	  		
-	def resolve_names(self, scope):
-		sys.stderr.write("resolve_names not implemented for: %s\n" % (self));
-	
-	def check_types(self):
-		sys.stderr.write("check_types method not implemented for %s\n" % (self));
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		
 	def add_children(self, *children):
 		for child in children:
@@ -94,12 +70,8 @@ class Node:
 				current_node = current_node.parent;
 	
 	def gen_code(self, w):
-<<<<<<< HEAD
 		sys.stderr.write("Error: gen_code method not implemented for %s\n" % (self));
 		exit(0);
-=======
-		sys.stderr.write("gen_code method not implemented for %s\n" % (self));
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 
 class Program(Node):
 	def __init__(self, element):
@@ -107,10 +79,7 @@ class Program(Node):
 		self.add_children(*element);
 		self.element = element;
 		self.stack_slot = None;
-<<<<<<< HEAD
 		self.main_label = None;
-=======
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 	
 	def print_node(self, p):
 		p.display('program_elements', self.element);
@@ -118,7 +87,6 @@ class Program(Node):
 	def resolve_names(self, scope):
 		for fn in self.element:
 			scope.add(fn.name, fn);	
-<<<<<<< HEAD
 			
 		for fn in self.element:
 			fn.resolve_names(scope);
@@ -126,46 +94,15 @@ class Program(Node):
 		if (self.main_label is None):
 			type_error(None, "Undefined reference to main");
 			exit(-1);
-=======
-		
-		self.check_main();
-			
-		for fn in self.element:
-			fn.resolve_names(scope);
-			
-	def check_main(self):
-		valid_main = 0;
-		line_no = 0;
-		for prog_elem in self.element:
-			if (isinstance(prog_elem, Func_decl)) and prog_elem.name.token_value == 'main':
-				line_no = prog_elem.name.line_no;
-				valid_main = 1;
-				unify_types(Type_prim('int'), prog_elem.ret_type, prog_elem.name);
-				if len(prog_elem.args) == 0:
-					break;
-				elif len(prog_elem.args) == 1:
-					unify_types(Type_prim('int'), prog_elem.args[0].type, prog_elem.name);
-					break;
-				else:
-					type_error(prog_elem.name, "Wrong number of arguments in main. Instead of one or none " + str(len(prog_elem.args)) + " were given");
-				return prog_elem;
-				
-		if(valid_main == 0):	
-			type_error(None, "Undefined reference to main");
-			return None;
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 	
 	def check_types(self):
 		for el in self.element:
 			el.check_types();
 			
 	def gen_code(self, w):
-<<<<<<< HEAD
 		w.write('I_CALL_BEGIN');
 		w.write('I_CALL', self.main_label, 0);
 		w.write('I_EXIT');
-=======
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		for d in self.element:
 			d.gen_code(w);
 
@@ -175,29 +112,18 @@ class Param_decl(Node):
 		self.add_children(t_type);
 		self.name = name;
 		self.type = t_type;
-<<<<<<< HEAD
 		self.stack_slot = None;
-=======
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 	
 	def print_node(self,p):
 		p.display('name', self.name);
 		p.display('type', self.type);
 		
-<<<<<<< HEAD
 	def resolve_names(self, scope):
 		global stack_slot_index;
 		self.stack_slot = stack_slot_index;
 		stack_slot_index += 1;
 		
 		scope.add(self.name, self);
-=======
-	def resolve_names(scope):
-		scope.add(self.name, self);
-		global stack_slot_index;
-		self.stack_slot = stack_slot_index;
-		stack_slot_index += 1;
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 
 class Decl(Node):
 	pass
@@ -211,10 +137,7 @@ class Func_decl(Decl):
 		self.args = args;
 		self.body = body;
 		self.start_label = Label();
-<<<<<<< HEAD
 		self.num_locals = None;
-=======
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 	
 	def print_node(self,p):
 		p.display('name', self.name);
@@ -223,7 +146,6 @@ class Func_decl(Decl):
 		p.display('ret_type', self.ret_type);
 
 	def resolve_names(self, parent_scope):
-<<<<<<< HEAD
 		if (self.check_main()):
 			program = self.find_ancestor(Program);
 			program.main_label = self.start_label;
@@ -249,29 +171,16 @@ class Func_decl(Decl):
 				type_error(self.name, "Wrong number of arguments in main. Instead of none " + str(len(self.args)) + " were given");
 					
 		return valid_main
-=======
-		stack_slot_index = 0;
-		scope = Scope(parent_scope);
-		scope.members = copy.deepcopy(parent_scope.members); # copy all members
-		for param in self.args:
-			if(not param.type.has_value()):
-				type_error(self.name, "Function cannot have a parameter of type " + param.type.kind);
-			scope.add(param.name, param);
-		self.body.resolve_names(scope);
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		
 	def check_types(self):
 		self.body.check_types();
 		
 	def gen_code(self, w):
 		w.place_label(self.start_label);
-<<<<<<< HEAD
 		
 		if (self.num_locals > 0):
 			w.write("I_ALLOC", self.num_locals)
 		
-=======
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		self.body.gen_code(w);
 		w.write("I_RET");
 	  
@@ -291,7 +200,6 @@ class Global_var_decl(Decl):
 		p.display('value', self.value);
   
 	def resolve_names(self, scope):
-<<<<<<< HEAD
 		global global_stack_slot_index;
 		self.global_slot = global_stack_slot_index;
 		global_stack_slot_index += 1;
@@ -300,29 +208,16 @@ class Global_var_decl(Decl):
 	def check_types(self):
 		if(not self.ret_type.has_value()):
 				type_error(self.name, "Function cannot have a parameter of type '" + param.type.kind + "'");
-=======
-		self.target_node = scope.resolve_name(self.name);
-		
-	def check_types(self):
-		if(not self.ret_type.has_value()):
-				type_error(self.name, "Function cannot have a parameter of type " + param.type.kind);
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 				
 		elif (self.value):
 			value_type = self.value.check_types();
 			unify_types(self.ret_type, value_type, self.name);
 			
 	def gen_code(self, w):
-<<<<<<< HEAD
 		#w.place_label(self.start_label);
 		if (self.value is not None):
 			self.value.gen_code(w);
 			w.write("I_SET_G", self.global_slot);
-=======
-		w.place_label(self.start_label);
-		self.value.gen_code(w);
-		w.write("I_SET_G", self.global_slot);
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 
 class Expr(Node):
 	pass;
@@ -333,11 +228,7 @@ class Expr_fun_call(Expr):
 		self.add_children(*args);
 		self.name = name;
 		self.args = args;
-<<<<<<< HEAD
 		self.target_node = None;
-=======
-		self.target = None;
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
   
 	def print_node(self,p):
 		p.display('name', self.name);
@@ -357,11 +248,7 @@ class Expr_fun_call(Expr):
 			return;
 		
 		elif (not isinstance(self.target_node, Func_decl)):
-<<<<<<< HEAD
 			type_error(self.target_node, "Call target is not a function");
-=======
-			type_error(self.target, "Call target is not a function");
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 			return;
 
 		param_types = []
@@ -370,11 +257,7 @@ class Expr_fun_call(Expr):
 			param_types.append(param.type)
 
 		if (len(param_types) is not len(self.args)):
-<<<<<<< HEAD
 			type_error(self.target_node, "Invalid argument count")
-=======
-			type_error(self.target, "Invalid argument count")
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 
 		param_count = min(len(param_types), len(self.args))
 		
@@ -439,37 +322,22 @@ class Expr_binary_arith(Expr_binary):
 			if (left_type.is_arithmetic() and right_type.is_arithmetic()):
 				unify_types(left_type, right_type, self.token);
 			else:
-<<<<<<< HEAD
 				type_error(self.token, "Cannot perform arithmetic operations with types '" + str(left_type.kind) + "' and '"  + str(right_type.kind) + "'");
-=======
-				type_error(self.token, "Cannot perform arithmetic operations with types " + str(left_type.kind) + " and "  + str(right_type.kind));
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 			
 			return left_type;
 		
 		elif(self.left is None):
 			left_type = None;
 			right_type = self.right.check_types();
-<<<<<<< HEAD
 			type_error(self.token, "Cannot perform arithmetic operations with types '" + str(left_type) + "' and '"  + str(right_type.kind) + "'");
-=======
-			type_error(self.token, "Cannot perform arithmetic operations with types " + str(left_type) + " and "  + str(right_type.kind));
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 				
 		elif(self.right is None):
 			left_type = self.left.check_types();
 			right_type = None;
-<<<<<<< HEAD
 			type_error(self.token, "Cannot perform arithmetic operations with types '" + str(left_type.kind) + "' and '"  + str(right_type) + "'");
 			
 		else:
 			type_error(self.token, "Cannot perform arithmetic operations with types '" + str(left_type) + "' and '"  + str(right_type) + "'");
-=======
-			type_error(self.token, "Cannot perform arithmetic operations with types " + str(left_type.kind) + " and "  + str(right_type));
-			
-		else:
-			type_error(self.token, "Cannot perform arithmetic operations with types " + str(left_type) + " and "  + str(right_type));
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		
 		return None;
 
@@ -481,81 +349,47 @@ class Expr_binary_compr(Expr_binary):
 			if (left_type.is_comparable() and right_type.is_comparable()):
 				unify_types(left_type, right_type, self.token);
 			else:
-<<<<<<< HEAD
 				type_error(self.token, "The values of types '" + str(left_type.kind) + "' and '"  + str(right_type.kind) + "' cannot be compared");
-=======
-				type_error(self.token, "The values of types cannot be compared " + str(left_type.kind) + " and "  + str(right_type.kind));
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 			return Type_prim('bool');
 		
 		elif(self.left is None):
 			left_type = None;
 			right_type = self.right.check_types();
-<<<<<<< HEAD
 			type_error(self.token, "The values of types '" + str(left_type) + "' and '"  + str(right_type.kind) + "' cannot be compared");
-=======
-			type_error(self.token, "The values of types cannot be compared " + str(left_type) + " and "  + str(right_type.kind));
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 				
 		elif(self.right is None):
 			left_type = self.left.check_types();
 			right_type = None;
-<<<<<<< HEAD
 			type_error(self.token, "The values of types '" + str(left_type.kind) + "' and '"  + str(right_type) + "' cannot be compared");
 			
 		else:
 			type_error(self.token, "The values of types '" + str(left_type) + "' and '"  + str(right_type) + "' cannot be compared");
-=======
-			type_error(self.token, "The values of types cannot be compared " + str(left_type.kind) + " and "  + str(right_type));
-			
-		else:
-			type_error(self.token, "The values of types cannot be compared " + str(left_type) + " and "  + str(right_type));
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		
 		return None;
 
 class Expr_binary_equal(Expr_binary):
 	def check_types(self):
-<<<<<<< HEAD
 		if(not None in [self.left, self.right]):
-=======
-		if(None not in [self.left, self.right]):
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 			left_type = self.left.check_types();
 			right_type = self.right.check_types();
 			if (left_type.has_value() and right_type.has_value()):
 				unify_types(left_type, right_type, self.token);
 			else:
-<<<<<<< HEAD
 				type_error(self.token, "Types '" + str(left_type.kind) + "' and '"  + str(right_type.kind) + "' have no value to compare");
-=======
-				type_error(self.token, "Types " + str(left_type.kind) + " and "  + str(right_type.kind) + " have no value to compare");
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 			return Type_prim('bool');
 		
 		elif(self.left is None):
 			left_type = None;
 			right_type = self.right.check_types();
-<<<<<<< HEAD
 			type_error(self.token, "Types '" + str(left_type) + "' and '"  + str(right_type.kind) + "' have no value to compare");
-=======
-			type_error(self.token, "Types " + str(left_type) + " and "  + str(right_type.kind) + " have no value to compare");
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 				
 		elif (self.right is None):
 			left_type = self.left.check_types();
 			right_type = None;
-<<<<<<< HEAD
 			type_error(self.token, "Types '" + str(left_type.kind) + "' and '"  + str(right_type) + "' have no value to compare");
 			
 		else:
 			type_error(self.token, "Types '" + str(left_type.kind) + "' and '"  + str(right_type) + "' have no value to compare");
-=======
-			type_error(self.token, "Types " + str(left_type.kind) + " and "  + str(right_type) + " have no value to compare");
-			
-		else:
-			type_error(self.token, "Types " + str(left_type.kind) + " and "  + str(right_type) + " have no value to compare");
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		
 		return None;
 
@@ -564,7 +398,6 @@ class Expr_binary_logic(Expr_binary):
 		if (None not in [self.left, self.right]):
 			left_type = self.left.check_types();
 			right_type = self.left.check_types();
-<<<<<<< HEAD
 			unify_types(left_type, Type_prim('bool'), self.token);
 			unify_types(right_type, Type_prim('bool'), self.token);
 			return Type_prim('bool')
@@ -575,13 +408,6 @@ class Expr_binary_logic(Expr_binary):
 		self.left.gen_code(w);
 		self.right.gen_code(w);
 		w.write('I_'+self.op);
-=======
-			unify_types(left_type, TYPE_BOOL, self.token);
-			unify_types(right_type, TYPE_BOOL, self.token);
-			return Type_prim('bool')
-		else:
-			type_error(self.token, "None type cannot be compared");
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		
 
 class Expr_unary(Expr):
@@ -611,7 +437,6 @@ class Expr_unary(Expr):
 		else:
 			gen_error(self.token, "Incorrect unary operation: " + str(self.op));
 	
-<<<<<<< HEAD
 class Expr_stdin(Expr):
 	def __init__(self, args):
 		super().__init__();
@@ -631,8 +456,6 @@ class Expr_stdin(Expr):
 		self.args.gen_code(w);
 		w.write("I_STDIN");
 
-=======
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 
 class Expr_lit(Expr):
 	def __init__(self, lit):
@@ -655,7 +478,6 @@ class Expr_lit(Expr):
 			return Type_prim("float")
 		elif self.type is "LIT_CHAR":
 			return Type_prim("char")
-<<<<<<< HEAD
 		elif self.type is "LIT_STR":
 			return Type_prim("string")
 		else:
@@ -676,26 +498,6 @@ class Expr_lit(Expr):
 			w.write("I_STR_PUSH", index);
 		else:
 			gen_error(self.lit, "Incorrect literal type '" + str(self.lit.token_type) + "'");			
-=======
-		elif self.type is "LIT_STRING":
-			return Type_prim("string")
-		else:
-			type_error(self.lit, "Type ' " + str(self.lit.value) + "'" + "is not implemented");
-			
-	def gen_code(self, w):
-		if(self.type is "LIT_INT"):
-			w.write("I_INT_PUSH", self.lit.token_value);
-		elif(self.type is "LIT_CHAR"):
-			w.write("I_CHAR_PUSH", ord(self.lit.token_value));			
-		elif(self.type is "LIT_FLOAT"):
-			w.write("I_FLOAT_PUSH", int(float(self.lit.token_value)));			
-		elif(self.type is "LIT_BOOL"):
-			w.write("I_BOOL_PUSH", 1 if self.lit.token_value == 'true' else 0);
-		elif(self.type is "LIT_STRING"):
-			w.write("I_STRING_PUSH", self.lit);
-		else:
-			gen_error(self.lit, "Incorrect literal type " + str(self.lit.token_type));			
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 			
 
 class Expr_var(Expr):
@@ -723,13 +525,8 @@ class Expr_var(Expr):
 	def gen_code(self, w):
 		if(hasattr(self.target_node, "stack_slot")):
 			w.write("I_GET_L", self.target_node.stack_slot);
-<<<<<<< HEAD
 		elif(hasattr(self.target_node, "global_slot")):
 			w.write("I_GET_G", self.target_node.global_slot);	
-=======
-		else:
-			w.write("I_GET_G");	
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 
 class Stmt(Node):
 	pass;
@@ -774,10 +571,7 @@ class Stmt_dec_var(Stmt):
 		global stack_slot_index;
 		self.stack_slot = stack_slot_index;
 		stack_slot_index += 1;
-<<<<<<< HEAD
 		
-=======
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		scope.add(self.name, self);
 		self.type.resolve_names(scope);
 		if (self.value is not None):
@@ -834,7 +628,6 @@ class Stmt_assign(Stmt):
 		self.value.resolve_names(scope);
 		
 	def check_types(self):
-<<<<<<< HEAD
 		#target_type = self.target.check_types();
 		value_type = self.value.check_types();
 		if (self.target_node):
@@ -879,30 +672,6 @@ class Stmt_if(Stmt):
 		self.body = body;
 		self.else_stmt = else_stmt;
 		self.end_l = None;
-=======
-		target_type = self.target.check_types();
-		value_type = self.value.check_types();
-		if target_type:
-			if target_type.has_value():
-				unify_types(target_type, value_type, self.token);
-			else:
-				type_error(self.token, "Cannot perform arithmetic operations with this type: " + str(target_type.kind));
-		return target_type;
-		
-	def gen_code(self, w):
-		if(hasattr(self.target_node, "stack_slot")):
-				w.write("I_SET_L", self.target_node.stack_slot);
-		else:
-			gen_error(self.token, "Incorrect assignment ");	
-
-class Stmt_if(Stmt):
-	def __init__(self, cond, body, else_stmt):
-		super().__init__();
-		self.add_children(cond, body);
-		self.condition = cond;
-		self.body = body;
-		self.else_stmt = else_stmt;
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 
 	def print_node(self,p):
 		p.display('condition', self.condition);
@@ -924,7 +693,6 @@ class Stmt_if(Stmt):
 			self.else_stmt.check_types();
 			
 	def gen_code(self, w):
-<<<<<<< HEAD
 		else_l = Label();
 		end_l = Label();
 		self.condition.gen_code(w);
@@ -935,13 +703,6 @@ class Stmt_if(Stmt):
 		if (self.else_stmt):
 			self.else_stmt.gen_code(w);
 		w.place_label(end_l)
-=======
-		end_l = w.new_label();
-		self.condition.gen_code(w);
-		w.write("I_BZ", end_l);
-		self.body.gen_code(w);
-		w.place_label(end_l);
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
   
 class Stmt_while(Stmt):
 	def __init__(self, cond, body):
@@ -949,11 +710,8 @@ class Stmt_while(Stmt):
 		self.add_children(cond, body);
 		self.condition = cond;
 		self.body = body;
-<<<<<<< HEAD
 		self.start_l = Label();
 		self.end_l = Label();
-=======
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 	
 	def print_node(self,p):
 		p.display('condition', self.condition);
@@ -969,23 +727,12 @@ class Stmt_while(Stmt):
 		self.body.check_types();
 	
 	def gen_code(self, w):
-<<<<<<< HEAD
 		w.place_label(self.start_l);
 		self.condition.gen_code(w);
 		w.write("I_BZ", self.end_l);
 		self.body.gen_code(w);
 		w.write("I_BR", self.start_l);
 		w.place_label(self.end_l);
-=======
-		start_l = w.new_label();
-		w.place_label(start_l)
-		end_l = w.new_label();
-		self.condition.gen_code(w);
-		w.write("I_BZ", end_l);
-		self.body.gen_code(w);
-		w.write("I_BR", start_l);
-		w.place_label(end_l);
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 
 class Stmt_return(Stmt):
 	def __init__(self, kw_return, value):
@@ -1007,11 +754,7 @@ class Stmt_return(Stmt):
 		value_type = Type_prim('void');
 		if self.value:
 			value_type = self.value.check_types();
-<<<<<<< HEAD
 		unify_types(ret_type, value_type, self.kw_return);
-=======
-		unify_types(ret_type, value_type, self.value);
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 		
 	def gen_code(self, w):
 		if(self.value):
@@ -1038,21 +781,14 @@ class Stmt_continue(Stmt):
 			curr_node = curr_node.parent;
 			
 		if (self.target_node is None):
-<<<<<<< HEAD
 			sys.stderr.write(sys.argv[1] + ":" + str(self.kw_continue.line_no)+ ": Error: " + "Continue is not in a while statement" + "\n");
-=======
-			sys.stderr.write("Continue is not in a while statement on line: %i\n" % (self.kw_continue.line_no));
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 			exit(0);
 			
 	def check_types(self):
 		pass;
-<<<<<<< HEAD
 		
 	def gen_code(self, w):
 		w.write("I_BR", self.target_node.start_l);
-=======
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 			
 class Stmt_break(Stmt):
 	def __init__(self, kw_break):
@@ -1072,22 +808,14 @@ class Stmt_break(Stmt):
 			curr_node = curr_node.parent;
 			
 		if (self.target_node is None):
-<<<<<<< HEAD
 			sys.stderr.write(sys.argv[1] + ":" + str(self.kw_break.line_no)+ ": Error: " + "Break is not in a while statement" + "\n");
-=======
-			sys.stderr.write("Break is not in a while statement on line: %i\n" % (self.kw_break.line_no));
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 			exit(0);
 			
 	def check_types(self):
 		pass;
 		
 	def gen_code(self, w):
-<<<<<<< HEAD
 		w.write("I_BR", self.target_node.end_l);
-=======
-		w.write("I_BR", "LOOP_END");
->>>>>>> 63feeeb22ce23a725d4aec7035f3098f509ee4d4
 
 class Type(Node):
 	def is_arithmetic(self):
