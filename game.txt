@@ -1,0 +1,23 @@
+#fun int game(int i){
+#	
+#	if(i == 0){
+#		return 0;
+#	}
+#	else if(i == 1){
+#		return 1;
+#	}
+#	else{
+#		return game(i - 2) + game(i - 1);
+#	}
+#
+#}
+
+fun int main(){
+	int a;
+	int b;
+	#a = game(8);
+	->"20";
+	a = -<30;
+	return a;
+}
+

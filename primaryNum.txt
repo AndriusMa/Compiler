@@ -1,0 +1,25 @@
+fun string primary(int i){
+	int counter = 2;
+	if(i > 1 && i <= 100){
+		while(counter < i){
+			if((i % counter) == 0){
+				return "Not a prime number";
+				break;
+			}
+			counter = counter + 1;
+		}
+		return "It is a prime number";
+	}
+	
+	else{
+		return "Number is not in (1...100) bounds";
+	}
+
+}
+
+fun string main(){
+	string answer;
+	answer = primary(11);
+	return answer;
+}
+

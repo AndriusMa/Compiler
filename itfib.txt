@@ -1,0 +1,22 @@
+fun int fib(int n){
+	
+	int prevPrevNum;
+	int prevNum = 0;
+	int currNum = 1;
+	int i = 1;
+	
+	while(i < n){
+		prevPrevNum = prevNum;
+		prevNum = currNum;
+		currNum = prevPrevNum + prevNum;
+		i = i+1;
+	}
+	return currNum;
+}
+
+fun int main(){
+	int a;
+	a = fib(8);
+	return a;
+}
+
