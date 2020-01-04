@@ -1,23 +1,28 @@
-#fun int game(int i){
-#	
-#	if(i == 0){
-#		return 0;
-#	}
-#	else if(i == 1){
-#		return 1;
-#	}
-#	else{
-#		return game(i - 2) + game(i - 1);
-#	}
-#
-#}
+fun int game(int i){
+	int a;
+	int counter = 0;
+	while(true){
+		->"Enter your number";
+		-<a;
+		if(a > i){
+			->"The number you want to guess is lesser";
+			counter = counter + 1;
+		}
+		else if(a < i){
+			->"The number you want to guess is greater";
+			counter = counter + 1;
+		}
+		else{
+			counter = counter + 1;
+			break;
+		}	
+	}
+	return counter;
+}
 
 fun int main(){
 	int a;
-	int b;
-	#a = game(8);
-	->"20";
-	a = -<30;
+	a = game(3000);
 	return a;
 }
 

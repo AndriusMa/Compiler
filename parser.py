@@ -217,8 +217,8 @@ class Parser:
 			return self.parse_expr_lit_char();
 		elif(self.tokens[self.offset].token_type == "OP_ROUND_OPEN"):
 			return self.parse_expr_paren();
-		elif(self.tokens[self.offset].token_type == "STDIN"):
-			return self.parse_expr_stdin();
+		elif(self.tokens[self.offset].token_type == "STDOUT"):
+			return self.parse_expr_stdout();
 		else:
 			return None;
 	
@@ -249,10 +249,10 @@ class Parser:
 		lit = self.expect("LIT_CHAR");
 		return Expr_lit(lit);
 	
-	def parse_expr_stdin(self):
-		lit = self.expect("STDIN");
+	def parse_expr_stdout(self):
+		lit = self.expect("STDOUT");
 		expr = self.parse_expr();
-		return Expr_stdin(expr);
+		return Stmt_stdout(expr);
 		
 	def parse_expr_paren(self):
 		self.expect("OP_ROUND_OPEN");

@@ -436,26 +436,6 @@ class Expr_unary(Expr):
 			w.write("I_DEC");	
 		else:
 			gen_error(self.token, "Incorrect unary operation: " + str(self.op));
-	
-class Expr_stdin(Expr):
-	def __init__(self, args):
-		super().__init__();
-		self.add_children(args);
-		self.args = args;
-		
-	def print_node(self,p):
-		p.display('args', self.args);
-	
-	def resolve_names(self, scope):
-		self.args.resolve_names(scope);
-			
-	def check_types(self):
-		self.args.check_types();
-			
-	def gen_code(self, w):
-		self.args.gen_code(w);
-		w.write("I_STDIN");
-
 
 class Expr_lit(Expr):
 	def __init__(self, lit):
@@ -639,17 +619,41 @@ class Stmt_assign(Stmt):
 	def gen_code(self, w):
 		self.value.gen_code(w);
 		if(hasattr(self.target_node, "stack_slot")):
-				w.write("I_SET_L", self.target_node.stack_slot);
+			w.write("I_SET_L", self.target_node.stack_slot);
 		elif(hasattr(self.target_node, "global_slot")):
 			w.write("I_SET_G", self.target_node.global_slot);
 		else:
 			gen_error(self.token, "Incorrect assignment ");	
+
+class Stmt_stdin(Stmt):
+	def __init__(self, args):
+		super().__init__();
+		self.add_children(args);
+		self.args = args;
+		self.target_node = None; 
+		
+	def print_node(self,p):
+		p.display('args', self.args);
+	
+	def resolve_names(self, scope):
+		self.target_node = scope.resolve_name(self.args.name);
+		self.args.resolve_names(scope);
+			
+	def check_types(self):
+		self.args.check_types();
+			
+	def gen_code(self, w):
+		self.args.gen_code(w);
+		w.write("I_STDIN");
+		if(hasattr(self.target_node, "stack_slot")):
+			w.write("I_SET_L", self.target_node.stack_slot);
 
 class Stmt_stdout(Stmt):
 	def __init__(self, args):
 		super().__init__();
 		self.add_children(args);
 		self.args = args;
+		self.target_node = None;
 		
 	def print_node(self,p):
 		p.display('args', self.args);
@@ -661,8 +665,16 @@ class Stmt_stdout(Stmt):
 		self.args.check_types();
 			
 	def gen_code(self, w):
-		self.args.gen_code(w);
-		w.write("I_STDOUT");
+		#self.args.gen_code(w);
+		#index = len(stdout_list);
+		#if(isinstance(self.args, Expr_var)):
+		#	stdout_list.append(self.args.name.token_value); # Expr_lit
+		#else:
+		#	stdout_list.append(self.args.lit.token_value); # Expr_var
+		
+		if self.args:
+			self.args.gen_code(w);	
+			w.write("I_STDOUT");
 
 class Stmt_if(Stmt):
 	def __init__(self, cond, body, else_stmt):

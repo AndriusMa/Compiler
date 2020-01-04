@@ -79,27 +79,45 @@ class VM:
 		elif instr_name in ('I_INT_OP_CMP_L', 'I_FLOAT_OP_CMP_L'):
 			b = self.pop()
 			a = self.pop()
-			self.push(1 if a < b else 0)
+			if(a or b is str):
+				self.push(1 if int(a) < int(b) else 0)
+			else:
+				self.push(1 if a < b else 0)
 		elif instr_name in ('I_INT_OP_CMP_G', 'I_FLOAT_OP_CMP_G'):
 			b = self.pop()
 			a = self.pop()
-			self.push(1 if a > b else 0)
+			if(a or b is str):
+				self.push(1 if int(a) > int(b) else 0)
+			else:
+				self.push(1 if a > b else 0)
 		elif instr_name in ('I_INT_OP_CMP_LE', 'I_FLOAT_OP_CMP_LE'):
 			b = self.pop()
 			a = self.pop()
-			self.push(1 if a <= b else 0)
+			if(a or b is str):
+				self.push(1 if int(a) <= int(b) else 0)
+			else:
+				self.push(1 if a <= b else 0)
 		elif instr_name in ('I_INT_OP_CMP_GE', 'I_FLOAT_OP_CMP_GE'):
 			b = self.pop()
 			a = self.pop()
-			self.push(1 if a >= b else 0)
+			if(a or b is str):
+				self.push(1 if int(a) >= int(b) else 0)
+			else:
+				self.push(1 if a >= b else 0)
 		elif instr_name in ('I_INT_COMPARE', 'I_FLOAT_COMPARE'):
 			b = self.pop()
 			a = self.pop()
-			self.push(1 if a == b else 0)
+			if(a or b is str):
+				self.push(1 if int(a) == int(b) else 0)
+			else:
+				self.push(1 if a == b else 0)
 		elif instr_name in ('I_INT_NOT_ASSIGN', 'I_FLOAT_NOT_ASSIGN'):
 			b = self.pop()
 			a = self.pop()
-			self.push(1 if a != b else 0)
+			if(a or b is str):
+				self.push(1 if int(a) != int(b) else 0)
+			else:
+				self.push(1 if a != b else 0)
 		elif instr_name in ('I_LOGICAL_AND'):
 			b = self.pop()
 			a = self.pop()
@@ -149,13 +167,10 @@ class VM:
 		elif instr_name == 'I_EXIT':
 			self.running = 0
 		elif instr_name == 'I_STDOUT':
-			#index = self.read_imm()
-			#print(string_list[index]);
-			print("stdout");
+			print(self.pop());
 		elif instr_name == 'I_STDIN':
-			#index = self.read_imm()
-			#print(string_list[index]);
-			print("stdin");
+			inp = input()
+			self.push(inp)
 		else:
-			sys.stderr.write("Invalid instruction opcode 0x%2x \n" % opcode)
+			sys.stderr.write("Invalid instruction opcode 0x%2x \n Couldn't start VM" % opcode)
 			exit(-1);
